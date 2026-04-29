@@ -83,6 +83,8 @@ export default function Dashboard() {
   const [isDragging,   setIsDragging]   = useState(false);
   const [saving,       setSaving]       = useState(false);
   const [expandedBucket, setExpandedBucket] = useState(null);
+  const [editEmp,      setEditEmp]      = useState(null);
+  const [editForm,     setEditForm]     = useState(null);
   const fileRef    = useRef();
   const pdfDropRef = useRef();
 
@@ -239,7 +241,26 @@ export default function Dashboard() {
     finally { setSaving(false); }
   }
 
-  const closeModal = () => { setModal(null); setImportRows([]); setImportErr(""); setPdfResult(null); setPdfError(""); setPdfParsing(false); setExpandedBucket(null); setBonusInput(""); };
+  const closeModal = () => { setModal(null); setImportRows([]); setImportErr(""); setPdfResult(null); setPdfError(""); setPdfParsing(false); setExpandedBucket(null); setBonusInput(""); setEditEmp(null); setEditForm(null); };
+
+  function openEdit(e, emp) {
+    e.stopPropagation();
+    setEditEmp(emp);
+    setEditForm({ name: emp.name, email: emp.email, role: emp.role, department: emp.department, startDate: emp.startDate || "", accrualRate: emp.accrualRate || 3.33, managerId: emp.managerId || "" });
+    setModal("editEmp");
+  }
+
+  async function submitEditEmp() {
+    if (!editForm.name || !editForm.email) return;
+    setSaving(true);
+    try {
+      const res = await client.put(`/employees/${editEmp.id}`, editForm);
+      setEmployees(prev => prev.map(e => e.id === editEmp.id ? res.data : e));
+      if (detailEmp?.id === editEmp.id) setDetailEmp(res.data);
+      closeModal();
+    } catch(err) { console.error(err); }
+    finally { setSaving(false); }
+  }
   const bk = key => BUCKETS.find(b=>b.key===key) || BUCKETS[0];
 
   // ─── Loading state ──────────────────────────────────────────────────────────
@@ -373,13 +394,23 @@ export default function Dashboard() {
                       <div style={{ display:"flex", alignItems:"center", gap:10 }}>
                         <div style={{ width:34, height:34, borderRadius:"50%", background:avC(emp.name), display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontWeight:700, fontSize:11, flexShrink:0 }}>{ini(emp.name)}</div>
                         <div>
-                          <p style={{ margin:0, fontWeight:600, fontSize:13, color:"#111111" }}>{emp.name}</p>
+                          <div style={{ display:"flex", alignItems:"center", gap:5 }}>
+                            <p style={{ margin:0, fontWeight:600, fontSize:13, color:"#111111" }}>{emp.name}</p>
+                            {isAdmin && (
+                              <button onClick={e => openEdit(e, emp)}
+                                title="Edit employee"
+                                style={{ background:"none", border:"none", cursor:"pointer", padding:"2px 5px", fontSize:12, color:"#009cbd", borderRadius:5, lineHeight:1, opacity:0.45, transition:"opacity 0.15s" }}
+                                onMouseEnter={e => e.currentTarget.style.opacity=1}
+                                onMouseLeave={e => e.currentTarget.style.opacity=0.45}>✏️</button>
+                            )}
+                          </div>
                           <div style={{ display:"flex", gap:4, marginTop:2, flexWrap:"wrap" }}>
                             <span style={{ fontSize:10, color:"#aaa", textTransform:"capitalize" }}>{emp.role}</span>
                             {!vacEligible(emp) && <span style={{ fontSize:9, fontWeight:700, background:"#FFF8E7", color:"#B76E00", padding:"1px 5px", borderRadius:4 }}>Vac accrual starts {new Date(new Date(emp.startDate).setMonth(new Date(emp.startDate).getMonth()+6)).toLocaleDateString("en-US",{month:"short",year:"numeric"})}</span>}
                             {!othEligible(emp) && <span style={{ fontSize:9, fontWeight:700, background:"#F3E8F7", color:"#009cbd", padding:"1px 5px", borderRadius:4 }}>Eligible {new Date(new Date(emp.startDate).getTime()+90*86400000).toLocaleDateString("en-US",{month:"short",day:"numeric"})}</span>}
                           </div>
                         </div>
+
                       </div>
                     </td>
                     <td style={{ padding:"12px 14px" }}>
@@ -727,6 +758,32 @@ export default function Dashboard() {
                 ))}
               </div>
               <button onClick={submitEmp} disabled={saving} style={{ width:"100%", padding:"11px", background:saving?"#b8dde5":"#009cbd", border:"none", borderRadius:10, color:"#fff", fontWeight:700, fontSize:14, cursor:saving?"default":"pointer", fontFamily:"inherit" }}>{saving?"Adding…":"Add Employee"}</button>
+            </div>
+          )}
+
+          {/* EDIT EMPLOYEE */}
+          {modal==="editEmp" && isAdmin && editForm && (
+            <div style={{ background:"#fff", borderRadius:20, padding:28, width:520, maxHeight:"90vh", overflowY:"auto", boxShadow:"0 20px 60px rgba(0,0,0,0.2)" }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20 }}>
+                <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+                  <div style={{ width:36, height:36, borderRadius:"50%", background:avC(editEmp.name), display:"flex", alignItems:"center", justifyContent:"center", color:"#fff", fontWeight:700, fontSize:12 }}>{ini(editEmp.name)}</div>
+                  <h2 style={{ margin:0, fontSize:18 }}>Edit Employee</h2>
+                </div>
+                <button onClick={closeModal} style={{ background:"none", border:"none", fontSize:18, cursor:"pointer", color:"#aaa" }}>✕</button>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:20 }}>
+                {[
+                  { l:"Full Name",                  el:<input type="text"   value={editForm.name}        onChange={e=>setEditForm(p=>({...p,name:e.target.value}))}        style={IS}/> },
+                  { l:"Work Email",                 el:<input type="email"  value={editForm.email}       onChange={e=>setEditForm(p=>({...p,email:e.target.value}))}       style={IS}/> },
+                  { l:"Role",                       el:<select value={editForm.role} onChange={e=>setEditForm(p=>({...p,role:e.target.value}))} style={IS}><option value="employee">Employee</option><option value="manager">Manager</option><option value="admin">Admin</option></select> },
+                  { l:"Team",                       el:<select value={editForm.department} onChange={e=>setEditForm(p=>({...p,department:e.target.value}))} style={IS}>{TEAMS.filter(d=>d!=="All").map(d=><option key={d}>{d}</option>)}</select> },
+                  { l:"Hire Date",                  el:<input type="date"   value={editForm.startDate}   onChange={e=>setEditForm(p=>({...p,startDate:e.target.value}))}   style={IS}/> },
+                  { l:"Accrual Rate (hrs/period)",  el:<input type="number" step="0.01" value={editForm.accrualRate} onChange={e=>setEditForm(p=>({...p,accrualRate:+e.target.value}))} style={IS}/> },
+                ].map(({l,el})=><div key={l}><label style={LS}>{l}</label>{el}</div>)}
+              </div>
+              <button onClick={submitEditEmp} disabled={saving} style={{ width:"100%", padding:"11px", background:saving?"#b8dde5":"#009cbd", border:"none", borderRadius:10, color:"#fff", fontWeight:700, fontSize:14, cursor:saving?"default":"pointer", fontFamily:"inherit" }}>
+                {saving ? "Saving…" : "Save Changes"}
+              </button>
             </div>
           )}
 
