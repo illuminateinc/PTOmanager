@@ -1,0 +1,19 @@
+-- Link Cognito sub UUIDs to users rows (matched by email)
+UPDATE users SET cognito_sub = '34e824d8-0061-7013-8806-fe1efff5793c' WHERE email = 'fdadrass@illuminate.net';
+UPDATE users SET cognito_sub = '44e81428-5061-70d4-9454-cbdce406b22f' WHERE email = 'smcmahon@illuminate.net';
+UPDATE users SET cognito_sub = '24c80488-1071-702c-5fc2-33160e03d7dd' WHERE email = 'ccommiso@illuminate.net';
+UPDATE users SET cognito_sub = '34487418-9061-7010-9c3f-e68409d5f457' WHERE email = 'mbocanegra@illuminate.net';
+UPDATE users SET cognito_sub = 'f4c84488-3011-70d9-b6b0-6ff1b4e0c666' WHERE email = 'kdawes@illuminate.net';
+UPDATE users SET cognito_sub = '34e8b478-0091-70d5-69f0-67207c662bd8' WHERE email = 'kfitzgibbon@illuminate.net';
+UPDATE users SET cognito_sub = '94b8d448-f0a1-70a3-c575-7f210ee6458f' WHERE email = 'dgoldsmith@illuminate.net';
+UPDATE users SET cognito_sub = 'f4d884d8-30f1-70f3-533e-e843b1e9fb44' WHERE email = 'whwang@illuminate.net';
+UPDATE users SET cognito_sub = '2498a4b8-f091-7068-5561-4057fbd4710c' WHERE email = 'slooney@illuminate.net';
+UPDATE users SET cognito_sub = '2428c478-c0c1-709a-5541-23c0e52ddb3c' WHERE email = 'notanez@illuminate.net';
+UPDATE users SET cognito_sub = '7428a498-e0c1-7047-3ceb-cda22a56cfef' WHERE email = 'pranade@illuminate.net';
+UPDATE users SET cognito_sub = '1438c4c8-6031-7041-cce2-3c3470b8fc1b' WHERE email = 'rdaley@illuminate.net';
+UPDATE users SET cognito_sub = '44e8a408-20a1-701c-6cae-41898947976c' WHERE email = 'jrosario@illuminate.net';
+UPDATE users SET cognito_sub = 'c4a8c478-3041-70b4-560c-a81342d2a723' WHERE email = 'fshaikh@illuminate.net';
+UPDATE users SET cognito_sub = '141894a8-20b1-701c-ef6a-13dde206cb83' WHERE email = 'vnar@illuminate.net';
+UPDATE users SET cognito_sub = 'b42834b8-7091-702e-121f-ec668cd6b14d' WHERE email = 'mmiedzianowski@illuminate.net';
+UPDATE users SET cognito_sub = '54283488-00e1-701d-f0ea-57a80ecdb51b' WHERE email = 'mjones@illuminate.net';
+UPDATE users SET cognito_sub = 'a4d8f438-a021-70cf-7f1b-d9c2d2c9e153' WHERE email = 'jcpinedo@illuminate.net';

@@ -14,8 +14,8 @@ const args = process.argv.slice(2);
 const fileIdx = args.indexOf('--file');
 const file = fileIdx !== -1 ? args[fileIdx + 1] : null;
 
-if (!file || !['schema', 'seed'].includes(file)) {
-  console.error('Usage: node db/invoke-migration.js --file <schema|seed>');
+if (!file) {
+  console.error('Usage: node db/invoke-migration.js --file <filename>');
   process.exit(1);
 }
 
