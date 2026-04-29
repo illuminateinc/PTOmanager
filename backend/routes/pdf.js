@@ -3,19 +3,13 @@ const Anthropic = require('@anthropic-ai/sdk');
 
 const router = Router();
 
-let cachedApiKey;
 async function getApiKey() {
-  if (cachedApiKey) return cachedApiKey;
-  if (process.env.ANTHROPIC_API_KEY) {
-    cachedApiKey = process.env.ANTHROPIC_API_KEY;
-    return cachedApiKey;
-  }
+  if (process.env.ANTHROPIC_API_KEY) return process.env.ANTHROPIC_API_KEY;
   if (process.env.ANTHROPIC_API_KEY_SECRET_ARN) {
     const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
     const sm = new SecretsManagerClient({ region: process.env.AWS_REGION || 'us-east-1' });
     const secret = await sm.send(new GetSecretValueCommand({ SecretId: process.env.ANTHROPIC_API_KEY_SECRET_ARN }));
-    cachedApiKey = JSON.parse(secret.SecretString).key;
-    return cachedApiKey;
+    return JSON.parse(secret.SecretString).key;
   }
   throw new Error('No Anthropic API key configured');
 }
@@ -29,7 +23,7 @@ router.post('/parse', async (req, res, next) => {
     const anthropic = new Anthropic({ apiKey: await getApiKey() });
 
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: 1000,
       messages: [{
         role: 'user',
