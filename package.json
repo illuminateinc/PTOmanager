@@ -1,0 +1,12 @@
+{
+  "name": "illuminate-pto",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "db:migrate": "cd backend && npm run db:migrate",
+    "db:schema": "cd backend && LAMBDA_FUNCTION_NAME=IlluminatePtoStack-ApiFunctionCE271BD4-U9GZoo2pjLe8 npm run db:schema",
+    "db:seed": "cd backend && LAMBDA_FUNCTION_NAME=IlluminatePtoStack-ApiFunctionCE271BD4-U9GZoo2pjLe8 npm run db:seed",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install && cd ../infra && npm install"
+  }
+}

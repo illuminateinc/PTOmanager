@@ -1,0 +1,17 @@
+{
+  "name": "pto-infra",
+  "version": "1.0.0",
+  "scripts": {
+    "cdk": "cdk",
+    "deploy": "cdk deploy --outputs-file cdk-outputs.json",
+    "destroy": "cdk destroy"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.140.0",
+    "constructs": "^10.3.0",
+    "esbuild": "^0.21.3"
+  },
+  "devDependencies": {
+    "aws-cdk": "^2.140.0"
+  }
+}
