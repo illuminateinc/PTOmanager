@@ -3,8 +3,8 @@
 -- ── Step 1: Insert all users (manager_id set after to avoid FK ordering issues) ──
 INSERT INTO users (id, name, email, role, department, hire_date, accrual_rate) VALUES
   -- Admins
-  (3,  'Faridon Dadrass',      'fdadrass@illuminate.net',        'admin',    'Learning Tech',      '2019-12-16', 5.00),
-  (19, 'Shaun McMahon',        'smcmahon@illuminate.net',        'admin',    'Operations',         NOW()::date,  5.00),
+  (3,  'Faridon Dadrass',      'fdadrass@illuminate.net',        'admin',    'Learning Tech',      '2019-12-19', 5.00),
+  (19, 'Shaun McMahon',        'smcmahon@illuminate.net',        'admin',    'Operations',         '2004-08-01',  5.00),
   -- Manager
   (2,  'Carly Commiso',        'ccommiso@illuminate.net',        'manager',  'Learning Strategy',  '2022-11-21', 5.00),
   -- Employees
